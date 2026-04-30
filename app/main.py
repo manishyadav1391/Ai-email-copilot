@@ -1,4 +1,17 @@
 from app.services.email_service import connect_imap, fetch_unread_emails, parse_email
+from fastapi import FastAPI
+from app.routes.email_routes import router as email_router
+from app.scheduler import start_scheduler
+
+app = FastAPI(title="AI Email Copilot")
+
+app.include_router(email_router)  
+
+
+
+@app.on_event("startup")
+def startup_event():
+    start_scheduler()
 
 
 
@@ -15,3 +28,5 @@ if __name__ == "__main__":
         print("From:", data["from"])
         print("Subject:", data["subject"])
         print("Body:", data["body"][:200])
+
+      
